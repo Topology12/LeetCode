@@ -75,5 +75,7 @@ int main()
         cout << result->val;
         result = result->next;
     }
+    free(l1);
+    free(l2);
     return 0;
 }
