@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <stack>
 using namespace std;
 
 struct TreeNode
@@ -9,27 +10,41 @@ struct TreeNode
     TreeNode *right;
 };
 
-vector<int> travelTree(TreeNode *&root, vector<int> &nums);
-vector<int> inorderTraversal(TreeNode *&root);
-void createTreeNode(TreeNode *&root);
+vector<int> travelTree(TreeNode *root, vector<int> &nums);
+vector<int> inorderTraversal(TreeNode *root);
+vector<int> inorderTraversalTwo(TreeNode *root);
 TreeNode *createNode(int val);
+void createTree(TreeNode *&root);
 void insertNode(TreeNode *&root, int val);
+void createTreeNode(TreeNode *&root);
 void displayTree(TreeNode *root);
+
 int main()
 {
-    TreeNode *root = NULL;
+    TreeNode *root;
+    createTree(root);
     createTreeNode(root);
+    if (!root)
+        cout << "error";
+    displayTree(root);
     vector<int> result = inorderTraversal(root);
+    vector<int> result2 = inorderTraversalTwo(root);
+    for (int i = 0; i < result2.size(); i++)
+        cout << result2[i];
     return 0;
 }
 
-vector<int> inorderTraversal(TreeNode *&root)
+void createTree(TreeNode *&root)
+{
+    root = NULL;
+}
+vector<int> inorderTraversal(TreeNode *root)
 {
     vector<int> result;
     result = travelTree(root, result);
     return result;
 }
-vector<int> travelTree(TreeNode *&root, vector<int> &nums)
+vector<int> travelTree(TreeNode *root, vector<int> &nums)
 {
     if (!root)
         return nums;
@@ -43,6 +58,28 @@ vector<int> travelTree(TreeNode *&root, vector<int> &nums)
     nums = travelTree(root->right, nums);
     return nums;
 }
+TreeNode *createNode(int val)
+{
+    TreeNode *temp = new TreeNode();
+    temp->val = val;
+    temp->left = NULL;
+    temp->right = NULL;
+    return temp;
+}
+
+void insertNode(TreeNode *&root, int val)
+{
+    if (root == NULL)
+    {
+        root = createNode(val);
+        return;
+    }
+    if (root->val < val)
+        insertNode(root->right, val);
+    else
+        insertNode(root->left, val);
+}
+
 void createTreeNode(TreeNode *&root)
 {
     int n;
@@ -56,30 +93,31 @@ void createTreeNode(TreeNode *&root)
         insertNode(root, value);
     }
 }
-void insertNode(TreeNode *&root, int val)
+void displayTree(TreeNode *root)
 {
     if (root == NULL)
-    {
-        root = createNode(val);
         return;
-    }
-    if (root->val < val)
-        insertNode(root->left, val);
-    else
-        insertNode(root->right, val);
-}
-TreeNode *createNode(int val)
-{
-    TreeNode *temp = new TreeNode();
-    temp->val = val;
-    temp->left = NULL;
-    temp->right = NULL;
-    return temp;
-}
-void displayTree(TreeNode* root){
-    if(root == NULL)
-        return; 
-    displayTree(root->left); 
+    displayTree(root->left);
     root->val;
     displayTree(root->right);
+}
+vector<int> inorderTraversalTwo(TreeNode *root)
+{
+    stack<TreeNode *> temp;
+    vector<int> result;
+    TreeNode *curr = root;
+    while (curr || temp.empty())
+    {
+
+        while (!curr)
+        {
+            temp.push(root);
+            root = root->left;
+        }
+        curr = temp.top();
+        temp.pop();
+        result.push_back(curr->val);
+        curr = curr->right;
+    }
+    return result;
 }
