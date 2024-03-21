@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stack>
 using namespace std;
 struct TreeNode
 {
@@ -28,6 +29,7 @@ int main()
     displayTree(mainTree.root);
     bool result = isMetricTree(mainTree);
     cout << result;
+    free(mainTree.root);
     return 0;
 }
 TreeNode *createNode(int val)
@@ -101,7 +103,7 @@ bool leftAndRight(TreeNode *&lnode, TreeNode *&rnode)
 {
     if (lnode == NULL || rnode == NULL)
         return true;
-    if (lnode == NULL || rnode == NULL)
+    if (!lnode || !rnode)
         return false;
     if (lnode->val == rnode->val)
         return (leftAndRight(lnode->left, rnode->right) && leftAndRight(lnode->right, rnode->left));
