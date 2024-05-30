@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <iterator>
 using namespace std;
 
 string intToRoman(int num)
@@ -23,16 +24,13 @@ string intToRoman(int num)
     map<int, string>::reverse_iterator iter;
     for (iter = lst.rbegin(); iter != lst.rend(); iter++)
     {
-        cout << iter->first << endl;
-        if (num >= iter->first)
+        while (num >= iter->first)
         {
-            int size = num / iter->first;
-            cout << "size" << size << endl;
-            for (int i = 0; i < size; i++)
-                result += iter->second;
-            num -= iter->first * size;
-            cout << "num = " << num << endl;
+            result += iter->second;
+            num -= iter->first;
         }
+        if (num == 0)
+            break;
     }
     cout << result;
     return result;
